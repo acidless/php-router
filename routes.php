@@ -2,6 +2,7 @@
 
 $router = new Router();
 
-$router->GET("/test", function () {
+$router->GET("/test/:id", function ($params) {
     echo "test";
+    echo $params["id"];
 });

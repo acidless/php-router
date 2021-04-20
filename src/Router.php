@@ -5,10 +5,12 @@ class Router
 {
     private array $routes;
     private RouteHandler $routeHandler;
+    private string $notFoundHandler;
 
-    public function __construct()
+    public function __construct($notFoundHandler)
     {
         $this->routeHandler = new RouteHandler();
+        $this->notFoundHandler = $notFoundHandler;
     }
 
     public function checkRoutes()
@@ -44,5 +46,10 @@ class Router
     private function addRoute($url, $method, $callback)
     {
         $this->routes[] = new Route($url, $method, $callback);
+    }
+
+    public function onNotFound($callback)
+    {
+        $this->notFoundHandler = $callback;
     }
 }
