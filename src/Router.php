@@ -5,17 +5,23 @@ class Router
 {
     private array $routes;
     private RouteHandler $routeHandler;
-    private string $notFoundHandler;
+    private $notFoundHandler;
 
-    public function __construct($notFoundHandler)
+    public function __construct($notFoundHandler = null)
     {
         $this->routeHandler = new RouteHandler();
-        $this->notFoundHandler = $notFoundHandler;
+        if ($notFoundHandler) {
+            $this->notFoundHandler = $notFoundHandler;
+        }
     }
 
-    public function checkRoutes()
+    public function resolveRoutes()
     {
-        $this->routeHandler->checkRoutes($this->routes);
+        try {
+            $this->routeHandler->checkRoutes($this->routes);
+        } catch (NotFoundException $e) {
+            call_user_func($this->notFoundHandler, $e);
+        }
     }
 
     public function GET($url, $callback)

@@ -1,5 +1,6 @@
 <?php
 include_once "Route.php";
+include_once "utils/NotFoundException.php";
 
 class RouteHandler
 {
@@ -14,8 +15,12 @@ class RouteHandler
             $result = $this->parseRouteURL($url, $route->getRouteURLArray());
 
             if ($result["success"]) {
-                $route->execute($result["params"]);
+                return $route->execute($result["params"]);
             }
+
+            throw new NotFoundException(
+                "There is no route defined for this request!"
+            );
         }
     }
 
@@ -33,7 +38,6 @@ class RouteHandler
         }
 
         for ($i = 0; $i < sizeof($requestURLArray); $i++) {
-            echo "$requestURLArray[$i] $routeURLArray[$i]";
             $matches = [];
             preg_match("/:(\w+)/", $routeURLArray[$i], $matches);
 
